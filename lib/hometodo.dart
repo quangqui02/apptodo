@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp_todo/calendar.dart';
 import 'package:demoapp_todo/loading.dart';
+import 'package:demoapp_todo/object/category.dart';
 import 'package:demoapp_todo/user/login_screen.dart';
 import 'package:demoapp_todo/main.dart';
 import 'package:demoapp_todo/object/todo_provider.dart';
@@ -47,6 +48,21 @@ class _HomePageState extends State<HomePage> {
   TextEditingController updatecontent = TextEditingController();
   final CollectionReference todo =
       FirebaseFirestore.instance.collection('listtodo');
+
+  String? namecate = '';
+  Future<dynamic> getcate(uid) async {
+    await FirebaseFirestore.instance
+        .collection('category')
+        .doc("$uid")
+        .get()
+        .then((snapshot) async {
+      if (snapshot.exists) {
+        setState(() {
+          namecate = snapshot.data()!['name'];
+        });
+      }
+    });
+  }
 
   Future<void> updatetodo(uid_todo) {
     return todo
@@ -172,9 +188,12 @@ class _HomePageState extends State<HomePage> {
                           return Loading();
                         }
                         List<Todo>? todos = snapshot.data;
+
                         return ListView.builder(
                             itemCount: todos!.length,
                             itemBuilder: (BuildContext context, int index) {
+                              // getcate(todos[index].category);
+
                               return Slidable(
                                   key: Key(todos[index].content!),
                                   startActionPane: ActionPane(
@@ -265,20 +284,39 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                       trailing: IconButton(
                                         onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => DetailTodo(
-                                                  status: todos[index].status!,
-                                                  content:
-                                                      todos[index].content!,
-                                                  uid: todos[index].uid!,
-                                                  category:
-                                                      todos[index].category!,
-                                                  img: todos[index].img!,
-                                                  start: todos[index]
-                                                      .startcontent!,
-                                                  create: todos[index]
-                                                      .content_create_time!));
+                                          getcate(todos[index].category);
+                                          if (namecate != '') {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category: namecate!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category:
+                                                        todos[index].category!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          }
                                         },
                                         icon: Icon(
                                           Icons.more_vert_rounded,
@@ -327,6 +365,8 @@ class _HomePageState extends State<HomePage> {
                         return ListView.builder(
                             itemCount: todos!.length,
                             itemBuilder: (BuildContext context, int index) {
+                              // getcate(todos[index].category);
+
                               return Slidable(
                                   key: Key(todos[index].content!),
                                   startActionPane: ActionPane(
@@ -417,20 +457,39 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                       trailing: IconButton(
                                         onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => DetailTodo(
-                                                  status: todos[index].status!,
-                                                  content:
-                                                      todos[index].content!,
-                                                  uid: todos[index].uid!,
-                                                  category:
-                                                      todos[index].category!,
-                                                  img: todos[index].img!,
-                                                  start: todos[index]
-                                                      .startcontent!,
-                                                  create: todos[index]
-                                                      .content_create_time!));
+                                          getcate(todos[index].category);
+                                          if (namecate != null) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category: namecate!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category:
+                                                        todos[index].category!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          }
                                         },
                                         icon: Icon(
                                           Icons.more_vert_rounded,
@@ -447,169 +506,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ));
   }
-
-  // detailtodo(BuildContext context, content, img, create, start, stt) {
-  //   return showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       Size size = MediaQuery.of(context).size;
-  //       return AlertDialog(
-  //         backgroundColor: Color.fromARGB(255, 255, 255, 255),
-  //         shape: RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.all(Radius.circular(20))),
-  //         contentPadding: EdgeInsets.only(top: 10.0),
-  //         actions: <Widget>[
-  //           Container(
-  //               width: size.width * 1,
-  //               height: size.height * 0.45,
-  //               child: Column(
-  //                 children: [
-  //                   Center(
-  //                     child: Text(
-  //                       'Thông Tin',
-  //                       style: TextStyle(
-  //                           color: Colors.black,
-  //                           fontWeight: FontWeight.bold,
-  //                           fontSize: 25),
-  //                     ),
-  //                   ),
-  //                   Container(
-  //                     child: Row(
-  //                       children: [
-  //                         Container(
-  //                           width: size.width * 0.35,
-  //                           height: size.height * 0.2,
-  //                           decoration: BoxDecoration(
-  //                               color: Color.fromARGB(255, 119, 116, 116),
-  //                               borderRadius: BorderRadius.circular(10)),
-  //                           child: Center(
-  //                             child: Text(
-  //                               content,
-  //                               textAlign: TextAlign.center,
-  //                               style: TextStyle(
-  //                                   fontSize: 20,
-  //                                   color: Color.fromARGB(255, 255, 255, 255)),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                         Container(
-  //                           width: size.width * 0.38,
-  //                           height: size.height * 0.2,
-  //                           child: Image.network(
-  //                             img,
-  //                             width: size.width * 0.25,
-  //                             height: size.height * 0.17,
-  //                           ),
-  //                         )
-  //                       ],
-  //                     ),
-  //                   ),
-  //                   SizedBox(
-  //                     height: 10,
-  //                   ),
-  //                   Row(
-  //                     children: [
-  //                       Text(
-  //                         'Ngày tạo:',
-  //                         style: TextStyle(
-  //                           color: Colors.black,
-  //                           fontSize: 15,
-  //                         ),
-  //                       ),
-  //                       SizedBox(
-  //                         width: 10,
-  //                       ),
-  //                       Text(
-  //                         create.substring(0, 11),
-  //                         style: TextStyle(
-  //                             color: Colors.black,
-  //                             fontSize: 20,
-  //                             fontWeight: FontWeight.bold),
-  //                       )
-  //                     ],
-  //                   ),
-  //                   SizedBox(
-  //                     height: 10,
-  //                   ),
-  //                   Row(
-  //                     children: [
-  //                       Text(
-  //                         'Ngày ghi chú:',
-  //                         style: TextStyle(
-  //                           color: Colors.black,
-  //                           fontSize: 15,
-  //                         ),
-  //                       ),
-  //                       SizedBox(
-  //                         width: 10,
-  //                       ),
-  //                       Text(
-  //                         start,
-  //                         style: TextStyle(
-  //                             color: Colors.black,
-  //                             fontSize: 20,
-  //                             fontWeight: FontWeight.bold),
-  //                       )
-  //                     ],
-  //                   ),
-  //                   SizedBox(
-  //                     height: 10,
-  //                   ),
-  //                   Row(
-  //                     children: [
-  //                       Text(
-  //                         'Trạng Thái',
-  //                         style: TextStyle(
-  //                           color: Colors.black,
-  //                           fontSize: 15,
-  //                         ),
-  //                       ),
-  //                       SizedBox(
-  //                         width: 10,
-  //                       ),
-  //                       stt
-  //                           ? (Text(
-  //                               'Đã Hoàn Thành',
-  //                               style: TextStyle(
-  //                                   color: Colors.black,
-  //                                   fontSize: 20,
-  //                                   fontWeight: FontWeight.bold),
-  //                             ))
-  //                           : (Text(
-  //                               'Chưa Hoàn Thành',
-  //                               style: TextStyle(
-  //                                   color: Colors.black,
-  //                                   fontSize: 20,
-  //                                   fontWeight: FontWeight.bold),
-  //                             ))
-  //                     ],
-  //                   ),
-  //                   TextButton(
-  //                       onPressed: () {
-  //                         Navigator.pop(context);
-  //                       },
-  //                       child: Container(
-  //                           alignment: Alignment.center,
-  //                           width: 180,
-  //                           height: 50,
-  //                           decoration: BoxDecoration(
-  //                               border: Border.all(color: Colors.black),
-  //                               borderRadius: BorderRadius.circular(20),
-  //                               color: Colors.blue),
-  //                           child: Text(
-  //                             'Ok',
-  //                             style: TextStyle(
-  //                                 fontWeight: FontWeight.bold,
-  //                                 fontSize: 25,
-  //                                 color: Colors.white),
-  //                           ))),
-  //                 ],
-  //               ))
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   deletetodo(BuildContext context, id) {
     return showDialog<void>(
@@ -976,8 +872,8 @@ class _DetailTodoState extends State<DetailTodo> {
             Padding(
                 padding: const EdgeInsets.only(left: 30, top: 80),
                 child: Container(
-                    width: 300,
-                    height: 420,
+                    width: size.width * 0.85,
+                    height: size.height * 0.6,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white,
@@ -1001,47 +897,41 @@ class _DetailTodoState extends State<DetailTodo> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
-                          child: Container(
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: size.width * 0.35,
-                                  height: size.height * 0.2,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 119, 116, 116),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                    child: SingleChildScrollView(
-                                      child: Text(
-                                        '${this.widget.content}',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255)),
-                                      ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: size.width * 0.35,
+                                height: size.height * 0.2,
+                                decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 119, 116, 116),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                  child: SingleChildScrollView(
+                                    child: Text(
+                                      '${this.widget.content}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255)),
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  width: size.width * 0.38,
+                              ),
+                              Container(
+                                  width: size.width * 0.4,
                                   height: size.height * 0.2,
-                                  child: this.widget.img == ''
-                                      ? Image(
-                                          image: AssetImage('assets/todo.png'))
-                                      : Image.network(
-                                          '${this.widget.img}',
-                                          width: 70,
-                                          height: 70,
-                                        ),
-                                  // Image.network(
-                                  //   '${this.widget.img}',
-                                  //   width: 70,
-                                  //   height: 70,
-                                  // ),
-                                )
-                              ],
-                            ),
+                                  child: Container(
+                                    child: this.widget.img == ''
+                                        ? Image(
+                                            image:
+                                                AssetImage('assets/todo.png'),
+                                          )
+                                        : Image.network(
+                                            '${this.widget.img}',
+                                          ),
+                                  )),
+                            ],
                           ),
                         ),
                         SizedBox(

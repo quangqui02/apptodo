@@ -21,7 +21,21 @@ class TodoPageTrue extends StatefulWidget {
 class _TodoPageTrueState extends State<TodoPageTrue> {
   String _picture = 'todo.png';
   TextEditingController updatecontent = TextEditingController();
+  String? namecate = '';
 
+  Future<dynamic> getcate(uid) async {
+    await FirebaseFirestore.instance
+        .collection('category')
+        .doc("$uid")
+        .get()
+        .then((snapshot) async {
+      if (snapshot.exists) {
+        setState(() {
+          namecate = snapshot.data()!['name'];
+        });
+      }
+    });
+  }
   // late bool ischecked;
   // void chang() {
   //   setState(() {
@@ -165,20 +179,39 @@ class _TodoPageTrueState extends State<TodoPageTrue> {
                                           color: Colors.black,
                                         ),
                                         onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => DetailTodo(
-                                                  status: todos[index].status!,
-                                                  content:
-                                                      todos[index].content!,
-                                                  category:
-                                                      todos[index].category!,
-                                                  uid: todos[index].uid!,
-                                                  img: todos[index].img!,
-                                                  start: todos[index]
-                                                      .startcontent!,
-                                                  create: todos[index]
-                                                      .content_create_time!));
+                                          getcate(todos[index].category);
+                                          if (namecate != null) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category: namecate!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category:
+                                                        todos[index].category!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          }
                                         }),
                                   )));
                         }),

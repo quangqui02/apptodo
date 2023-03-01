@@ -1,13 +1,13 @@
 import 'package:demoapp_todo/calendar.dart';
 import 'package:demoapp_todo/hometodo.dart';
 import 'package:demoapp_todo/todo/create.dart';
+import 'package:demoapp_todo/todo/listcate.dart';
 import 'package:demoapp_todo/user/setting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'todo/category_todo.dart';
 import 'todo/tab_listtodo.dart';
 
 class Hometab extends StatefulWidget {
@@ -21,7 +21,7 @@ class _HometabState extends State<Hometab> {
   final List<Widget> lsScreen = [
     HomePage(),
     TabTodo(),
-    CategoryPage(),
+    ListCate(),
     CalendarPage(),
   ];
   int currenttab = 0;
@@ -51,6 +51,7 @@ class _HometabState extends State<Hometab> {
                     MaterialPageRoute(
                         builder: (context) => Createpage(
                               timecreate: null,
+                              cate: null,
                             )));
               },
             )
@@ -110,7 +111,7 @@ class _HometabState extends State<Hometab> {
                 minWidth: 40,
                 onPressed: () {
                   setState(() {
-                    currentScreen = CategoryPage();
+                    currentScreen = ListCate();
                     currenttab = 2;
                   });
                 },

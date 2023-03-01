@@ -156,8 +156,10 @@ class _CalendarPageState extends State<CalendarPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  Createpage(timecreate: time)));
+                              builder: (context) => Createpage(
+                                    timecreate: time,
+                                    cate: null,
+                                  )));
                     },
                     icon: Icon(
                       Icons.add,

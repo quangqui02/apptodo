@@ -1,3 +1,4 @@
+import 'package:demoapp_todo/error/messageerror.dart';
 import 'package:demoapp_todo/object/cate_provider.dart';
 import 'package:demoapp_todo/object/category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,17 +14,25 @@ import '../loading.dart';
 import '../object/todo.dart';
 import '../object/todo_provider.dart';
 
-class CategoryPage extends StatefulWidget {
-  CategoryPage({super.key});
+class CreateCate extends StatefulWidget {
+  CreateCate({super.key});
 
   @override
-  State<CategoryPage> createState() => _CategoryPageState();
+  State<CreateCate> createState() => _CreateCateState();
 }
 
-class _CategoryPageState extends State<CategoryPage> {
+class _CreateCateState extends State<CreateCate> {
+  List<String> listicon = <String>[
+    'family.png',
+    'love.png',
+    'canhan.png',
+    'working.png',
+    'banbe.png',
+    'ythuc.png'
+  ];
   TextEditingController name_cate = TextEditingController();
   final _auth = FirebaseAuth.instance.currentUser!;
-
+  String? icon;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -32,13 +41,12 @@ class _CategoryPageState extends State<CategoryPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         foregroundColor: Color.fromARGB(255, 0, 0, 0),
         title: Row(
           children: [
             SizedBox(
-              width: size.width * 0.27,
+              width: size.width * 0.1,
             ),
             Text(
               'Danh Mục',
@@ -72,6 +80,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 child: TextField(
                   controller: name_cate,
                   textAlignVertical: TextAlignVertical.bottom,
+                  maxLength: 20,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -88,6 +97,53 @@ class _CategoryPageState extends State<CategoryPage> {
               SizedBox(
                 height: size.height * 0.02,
               ),
+              Padding(
+                padding: const EdgeInsets.only(left: 35),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: icon,
+                      items: listicon.map((e) {
+                        return DropdownMenuItem(
+                          value: e,
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Center(
+                              child: Image(
+                                image: AssetImage(
+                                  'assets/' + '$e',
+                                ),
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          icon = value;
+                        });
+                      },
+                      hint: Center(
+                        child: const Text(
+                          'Chọn Icon',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: size.height * 0.05,
+              ),
               Container(
                 decoration: BoxDecoration(
                     color: Colors.green,
@@ -101,13 +157,21 @@ class _CategoryPageState extends State<CategoryPage> {
                         await CateProvider().createcategory(
                           name_cate.text.toString(),
                           _auth.uid.toString(),
+                          icon.toString(),
                         );
                         setState(() {
+                          Navigator.pop(context);
                           showDialog(
                               context: context,
                               builder: (context) => MessageTime());
                         });
                         name_cate.clear();
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) => MessageErrorTime(
+                                  text: 'Vui Lòng Nhập Tên Danh Mục',
+                                ));
                       }
                     },
                     child: Text(
@@ -122,80 +186,6 @@ class _CategoryPageState extends State<CategoryPage> {
           )),
           SizedBox(
             height: size.height * 0.01,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 65),
-            child: Container(
-              height: size.height * 0.05,
-              width: size.width * 0.7,
-              child: Text(
-                'Tất cả Danh Mục',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          Container(
-            // decoration: BoxDecoration(color: Colors.grey),
-            height: size.height * 0.4 - 63,
-            child: StreamBuilder(
-                stream: CateProvider().Catetodo(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Loading();
-                  }
-                  List<Cate>? cates = snapshot.data;
-                  return ListView.builder(
-                      itemCount: cates!.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Slidable(
-                            startActionPane: ActionPane(
-                              motion: const ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  flex: 1,
-                                  onPressed: (context) => {},
-                                  backgroundColor: Color(0xFFFE4A49),
-                                  foregroundColor: Colors.white,
-                                  icon: Icons.delete,
-                                  label: 'Delete',
-                                ),
-                              ],
-                            ),
-                            endActionPane: ActionPane(
-                              motion: ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  flex: 1,
-                                  onPressed: (context) => {},
-                                  backgroundColor: Color(0xFF7BC043),
-                                  foregroundColor: Colors.white,
-                                  icon: Icons.edit_calendar_outlined,
-                                  label: 'Chỉnh Sửa',
-                                ),
-                              ],
-                            ),
-                            child: Container(
-                                margin: EdgeInsets.only(
-                                    left: 20, right: 20, bottom: 10),
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: ListTile(
-                                  title: Center(
-                                    child: Text(
-                                      cates[index].name!,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                )));
-                      });
-                }),
           ),
         ]),
       ),

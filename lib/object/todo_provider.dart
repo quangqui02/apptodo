@@ -25,7 +25,6 @@ class TodoProvider {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
   Future deleleuser(uid) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -40,14 +39,8 @@ class TodoProvider {
         documentSnapshot.reference.delete();
       });
     });
-   
-    FirebaseAuth.instance.currentUser!.delete();
-    
-  }
 
-  
-  Future removeUser(uid) async {
-    await usercollection.doc(uid).delete();
+    FirebaseAuth.instance.currentUser!.delete();
   }
 
   CollectionReference todocollection =
@@ -67,19 +60,6 @@ class TodoProvider {
     });
   }
 
-  Future createlisttodo1(String content, String content_create_time,
-      String category, String img, String startcontent, String uid_user) async {
-    return await todocollection.doc().set({
-      "content": content,
-      "content-create-time": content_create_time,
-      "category": category,
-      "img": img,
-      "startcontent": startcontent,
-      "uid_user": uid_user,
-      "status": false,
-    });
-  }
-
   Future updatepass(uid, pass) async {
     await FirebaseAuth.instance.currentUser!.updatePassword(pass);
   }
@@ -88,10 +68,9 @@ class TodoProvider {
   Future forgetpass(email) async {
     FirebaseAuth.instance
         .sendPasswordResetEmail(
-      email: email,
-    )
-        .then((result) {
-    });
+          email: email,
+        )
+        .then((result) {});
   }
 
   Future removeTodo(uid) async {

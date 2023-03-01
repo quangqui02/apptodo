@@ -4,8 +4,12 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp_todo/error/messageerror.dart';
+import 'package:demoapp_todo/hometodo.dart';
 import 'package:demoapp_todo/loading.dart';
+import 'package:demoapp_todo/object/category.dart';
 import 'package:demoapp_todo/object/todo_provider.dart';
+import 'package:demoapp_todo/todo/catetodo.dart';
+import 'package:demoapp_todo/todo/listcate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,8 +29,11 @@ class Createpage extends StatefulWidget {
   Createpage({
     Key? key,
     required this.timecreate,
+    required this.cate,
   }) : super(key: key);
   String? timecreate;
+  Cate? cate;
+
   @override
   State<Createpage> createState() => _CreatepageState();
 }
@@ -34,7 +41,6 @@ class Createpage extends StatefulWidget {
 class _CreatepageState extends State<Createpage> {
   var userRef = FirebaseFirestore.instance.collection("category");
 
-// Retrieve all documents from the collection
   Future catelist() async {
     userRef.get().then((QuerySnapshot querySnapshot) {
       // let userList = [];
@@ -77,28 +83,39 @@ class _CreatepageState extends State<Createpage> {
     }
   }
 
-  PickedFile? image;
-  getimg() async {
-    image = await imagepicker.getImage(source: ImageSource.camera);
-    if (image != null) {
+  _navigator(BuildContext context) async {
+    dynamic result =
+        await showDialog(context: context, builder: (context) => CateTodo());
+    // dynamic result=await Navigator.push(context,MaterialPageRoute(builder: (context) => CateTodo(),));
+    if (result != null) {
       setState(() {
-        _image = File(image!.path);
+        this.widget.cate = result;
       });
     }
   }
 
-  postimg() async {
-    DateTime timeimage = DateTime.now();
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = referenceRoot.child(_user);
-    Reference referenceImageToUpload =
-        referenceDirImages.child(timeimage.toString());
-    try {
-      await referenceImageToUpload.putFile(File(image!.path));
-      imageUrl = await referenceImageToUpload.getDownloadURL();
-      // img = imageUrl.toString();
-    } catch (error) {}
-  }
+  // PickedFile? image;
+  // getimg() async {
+  //   image = await imagepicker.getImage(source: ImageSource.camera);
+  //   if (image != null) {
+  //     setState(() {
+  //       _image = File(image!.path);
+  //     });
+  //   }
+  // }
+
+  // postimg() async {
+  //   DateTime timeimage = DateTime.now();
+  //   Reference referenceRoot = FirebaseStorage.instance.ref();
+  //   Reference referenceDirImages = referenceRoot.child(_user);
+  //   Reference referenceImageToUpload =
+  //       referenceDirImages.child(timeimage.toString());
+  //   try {
+  //     await referenceImageToUpload.putFile(File(image!.path));
+  //     imageUrl = await referenceImageToUpload.getDownloadURL();
+  //     // img = imageUrl.toString();
+  //   } catch (error) {}
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -172,37 +189,48 @@ class _CreatepageState extends State<Createpage> {
               height: MediaQuery.of(context).size.height * 0.01,
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.85,
-              height: MediaQuery.of(context).size.height * 0.068,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(10)),
-              child: DropdownButton<String>(
-                isExpanded: true,
-                value: catagories,
-                items: list.map((e) {
-                  return DropdownMenuItem(
-                    value: e,
-                    child: Center(
-                      child: Text(
-                        '$e',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    catagories = value;
-                  });
-                },
-                hint: Center(
-                  child: const Text(
-                    'Hãy Lưu Nó Vào....',
+                width: MediaQuery.of(context).size.width * 0.85,
+                height: MediaQuery.of(context).size.height * 0.068,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(10)),
+                child: TextButton(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      this.widget.cate == null
+                          ? Image(
+                              image: AssetImage('assets/catetodo.png'),
+                              width: 40,
+                              height: 40,
+                            )
+                          : Image(
+                              image: AssetImage('assets/' +
+                                  this.widget.cate!.icon.toString()),
+                              width: 40,
+                              height: 40,
+                            ),
+                      this.widget.cate == null
+                          ? Text(
+                              'Chọn Danh Mục',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            )
+                          : Text(
+                              this.widget.cate!.name.toString(),
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                    ],
                   ),
-                ),
-              ),
-            ),
+                  onPressed: () {
+                    _navigator(context);
+                  },
+                )),
             SizedBox(
               height: MediaQuery.of(context).size.width * 0.02,
             ),
@@ -218,28 +246,28 @@ class _CreatepageState extends State<Createpage> {
                         borderRadius: BorderRadius.circular(10)),
                     child: TextButton(
                         onPressed: () async {
-                          getimg();
-                          // final image = await imagepicker.getImage(
-                          //     source: ImageSource.camera);
-                          // if (image != null) {
-                          //   setState(() {
-                          //     _image = File(image!.path);
-                          //   });
-                          // }
-                          // DateTime timeimage = DateTime.now();
-                          // Reference referenceRoot =
-                          //     FirebaseStorage.instance.ref();
-                          // Reference referenceDirImages =
-                          //     referenceRoot.child(_user);
-                          // Reference referenceImageToUpload =
-                          //     referenceDirImages.child(timeimage.toString());
-                          // try {
-                          //   await referenceImageToUpload
-                          //       .putFile(File(image!.path));
-                          //   imageUrl =
-                          //       await referenceImageToUpload.getDownloadURL();
-                          //   img = imageUrl.toString();
-                          // } catch (error) {}
+                          // getimg();
+                          final image = await imagepicker.getImage(
+                              source: ImageSource.camera);
+                          if (image != null) {
+                            setState(() {
+                              _image = File(image.path);
+                            });
+                          }
+                          DateTime timeimage = DateTime.now();
+                          Reference referenceRoot =
+                              FirebaseStorage.instance.ref();
+                          Reference referenceDirImages =
+                              referenceRoot.child(_user);
+                          Reference referenceImageToUpload =
+                              referenceDirImages.child(timeimage.toString());
+                          try {
+                            await referenceImageToUpload
+                                .putFile(File(image!.path));
+                            imageUrl =
+                                await referenceImageToUpload.getDownloadURL();
+                            img = imageUrl.toString();
+                          } catch (error) {}
                         },
                         child: Image(
                           image: AssetImage('assets/camera.png'),
@@ -310,10 +338,10 @@ class _CreatepageState extends State<Createpage> {
                     if (catagories == null) {
                       catagories = 'Riêng Tư';
                     }
-                    if (image != null) {
-                      postimg();
-                      noimg = true;
-                    }
+                    // if (image != null) {
+                    //   postimg();
+                    //   noimg = true;
+                    // }
                     // if (noimg == true) {
                     //   if (imageUrl == '') {
                     //     setState(() {
@@ -344,13 +372,12 @@ class _CreatepageState extends State<Createpage> {
                     // } else {
                     if (todocontent.text.isNotEmpty) {
                       await TodoProvider().createlisttodo(
-                        todocontent.text.toString(),
-                        createcontent.toString(),
-                        catagories.toString(),
-                        imageUrl.toString(),
-                        startcontent.toString(),
-                        uid_user.toString(),
-                      );
+                          todocontent.text.toString(),
+                          createcontent.toString(),
+                          this.widget.cate!.id.toString(),
+                          imageUrl.toString(),
+                          startcontent.toString(),
+                          uid_user.toString());
                       Navigator.pop(context);
                       setState(() {
                         showDialog(

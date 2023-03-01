@@ -21,6 +21,21 @@ class _TodoPageState extends State<TodoPage> {
   String _picture = 'todo.png';
   TextEditingController updatecontent = TextEditingController();
 
+  String? namecate = '';
+
+  Future<dynamic> getcate(uid) async {
+    await FirebaseFirestore.instance
+        .collection('category')
+        .doc("$uid")
+        .get()
+        .then((snapshot) async {
+      if (snapshot.exists) {
+        setState(() {
+          namecate = snapshot.data()!['name'];
+        });
+      }
+    });
+  }
   // late bool ischecked;
   // void chang() {
   //   setState(() {
@@ -174,20 +189,39 @@ class _TodoPageState extends State<TodoPage> {
                                           color: Colors.black,
                                         ),
                                         onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => DetailTodo(
-                                                  status: todos[index].status!,
-                                                  content:
-                                                      todos[index].content!,
-                                                  uid: todos[index].uid!,
-                                                  category:
-                                                      todos[index].category!,
-                                                  img: todos[index].img!,
-                                                  start: todos[index]
-                                                      .startcontent!,
-                                                  create: todos[index]
-                                                      .content_create_time!));
+                                          getcate(todos[index].category);
+                                          if (namecate != null) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category: namecate!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category:
+                                                        todos[index].category!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          }
                                         }),
                                   )));
                         }),
@@ -420,7 +454,10 @@ class _DetailTodoState extends State<DetailTodo> {
                                   height: size.height * 0.2,
                                   child: this.widget.img == ''
                                       ? Image(
-                                          image: AssetImage('assets/todo.png'))
+                                          image: AssetImage('assets/todo.png'),
+                                          width: 40,
+                                          height: 40,
+                                        )
                                       : Image.network(
                                           '${this.widget.img}',
                                           width: 70,

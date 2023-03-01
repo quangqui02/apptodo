@@ -5,10 +5,11 @@ class CateProvider {
   CollectionReference catetodo =
       FirebaseFirestore.instance.collection('category');
 
-  Future createcategory(String name, String uid_user) async {
+  Future createcategory(String name, String uid_user, String icon) async {
     return await catetodo.add({
       "name": name,
       "uid_user": uid_user,
+      "icon": icon,
     });
   }
 
@@ -19,6 +20,7 @@ class CateProvider {
           id: e.id,
           uid_user: (e.data() as dynamic)['uid_user'],
           name: (e.data() as dynamic)['name'],
+          icon: (e.data() as dynamic)['icon'],
         );
       }).toList();
     } else {
@@ -28,5 +30,25 @@ class CateProvider {
 
   Stream<List<Cate>> Catetodo() {
     return catetodo.snapshots().map(CateFromFirestore);
+  }
+
+  Future removecate(uid) async {
+    await catetodo.doc(uid).delete();
+  }
+
+  Future delelecate(uid) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    DocumentReference cateReference = firestore.collection("category").doc(uid);
+
+    cateReference.delete();
+
+    CollectionReference todoReference = firestore.collection("listtodo");
+
+    todoReference.where("category", isEqualTo: uid).get().then((querySnapshot) {
+      querySnapshot.docs.forEach((documentSnapshot) {
+        documentSnapshot.reference.delete();
+      });
+    });
   }
 }

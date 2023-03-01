@@ -35,6 +35,22 @@ class _DateNoteTState extends State<DateNoteT> {
         .catchError((error) => print("Failed to update user: $error"));
   }
 
+  String? namecate = '';
+
+  Future<dynamic> getcate(uid) async {
+    await FirebaseFirestore.instance
+        .collection('category')
+        .doc("$uid")
+        .get()
+        .then((snapshot) async {
+      if (snapshot.exists) {
+        setState(() {
+          namecate = snapshot.data()!['name'];
+        });
+      }
+    });
+  }
+
   final accid = FirebaseAuth.instance.currentUser?.uid;
 
   @override
@@ -65,6 +81,7 @@ class _DateNoteTState extends State<DateNoteT> {
                     child: ListView.builder(
                         itemCount: todos!.length,
                         itemBuilder: (BuildContext context, int index) {
+                          getcate(todos[index].category);
                           return Slidable(
                               key: Key(todos[index].content!),
                               startActionPane: ActionPane(
@@ -154,20 +171,38 @@ class _DateNoteTState extends State<DateNoteT> {
                                           color: Colors.black,
                                         ),
                                         onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => DetailTodo(
-                                                  status: todos[index].status!,
-                                                  content:
-                                                      todos[index].content!,
-                                                  uid: todos[index].uid!,
-                                                  category:
-                                                      todos[index].category!,
-                                                  img: todos[index].img!,
-                                                  start: todos[index]
-                                                      .startcontent!,
-                                                  create: todos[index]
-                                                      .content_create_time!));
+                                          if (namecate != null) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category: namecate!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) => DetailTodo(
+                                                    status:
+                                                        todos[index].status!,
+                                                    content:
+                                                        todos[index].content!,
+                                                    uid: todos[index].uid!,
+                                                    category:
+                                                        todos[index].category!,
+                                                    img: todos[index].img!,
+                                                    start: todos[index]
+                                                        .startcontent!,
+                                                    create: todos[index]
+                                                        .content_create_time!));
+                                          }
                                         }),
                                   )));
                         }),

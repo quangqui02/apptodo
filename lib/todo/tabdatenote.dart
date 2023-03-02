@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +14,6 @@ class TabDateNote extends StatefulWidget {
 
 class _TabDateNoteState extends State<TabDateNote>
     with TickerProviderStateMixin {
-  List<String> list = <String>['Tất Cả', 'Gia Đình', 'Công Việc', 'Riêng Tư'];
-  String? catagories;
   @override
   Widget build(BuildContext context) {
     TabController _controller = TabController(length: 2, vsync: this);
@@ -74,39 +73,39 @@ class _TabDateNoteState extends State<TabDateNote>
                   ),
                 ),
               ),
-              Container(
-                height: 50,
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: catagories,
-                  icon: Icon(
-                    Icons.filter_alt,
-                    color: Colors.black,
-                  ),
-                  items: list.map((e) {
-                    return DropdownMenuItem(
-                      value: e,
-                      child: Center(
-                        child: Text(
-                          '$e',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      catagories = value;
-                    });
-                  },
-                  hint: Center(
-                    child: const Text(
-                      'Hãy lọc ghi chú theo...',
-                      style: TextStyle(color: Colors.black, fontSize: 15),
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   height: 50,
+              //   child: DropdownButton<String>(
+              //     isExpanded: true,
+              //     value: catagories,
+              //     icon: Icon(
+              //       Icons.filter_alt,
+              //       color: Colors.black,
+              //     ),
+              //     items: list.map((e) {
+              //       return DropdownMenuItem(
+              //         value: e,
+              //         child: Center(
+              //           child: Text(
+              //             '$e',
+              //             textAlign: TextAlign.center,
+              //           ),
+              //         ),
+              //       );
+              //     }).toList(),
+              //     onChanged: (value) {
+              //       setState(() {
+              //         catagories = value;
+              //       });
+              //     },
+              //     hint: Center(
+              //       child: const Text(
+              //         'Hãy lọc ghi chú theo...',
+              //         style: TextStyle(color: Colors.black, fontSize: 15),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 4,
               ),
@@ -175,11 +174,9 @@ class _TabDateNoteState extends State<TabDateNote>
                   children: [
                     DateNoteF(
                       timenote: this.widget.timenote,
-                      cate: catagories,
                     ),
                     DateNoteT(
                       timenote: this.widget.timenote,
-                      cate: catagories,
                     ),
                   ],
                 ),

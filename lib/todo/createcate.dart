@@ -102,13 +102,17 @@ class _CreateCateState extends State<CreateCate> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    height: MediaQuery.of(context).size.height * 0.1,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.12,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.black),
                         borderRadius: BorderRadius.circular(10)),
                     child: DropdownButton<String>(
                       isExpanded: true,
+                      // isDense: tr,
+                      // elevation: 20,
+                      itemHeight: 100,
+                      iconSize: 20,
                       value: icon,
                       items: listicon.map((e) {
                         return DropdownMenuItem(
@@ -120,8 +124,6 @@ class _CreateCateState extends State<CreateCate> {
                                 image: AssetImage(
                                   'assets/' + '$e',
                                 ),
-                                width: 50,
-                                height: 50,
                               ),
                             ),
                           ),

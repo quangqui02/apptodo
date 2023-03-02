@@ -15,6 +15,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
@@ -62,7 +63,7 @@ class _CreatepageState extends State<Createpage> {
   String? catagories;
   TextEditingController todocontent = TextEditingController();
   bool status = false;
-  String img = '';
+
   DateTime createcontent = DateTime.now();
   DateTime timeimage = DateTime.now();
   final _user = FirebaseAuth.instance.currentUser!.uid;
@@ -83,6 +84,10 @@ class _CreatepageState extends State<Createpage> {
     }
   }
 
+  // Future<dynamic> getuser() async {
+  //   final img = FirebaseFirestore.instance.collection('listtodo').doc().id;
+  // }
+
   _navigator(BuildContext context) async {
     dynamic result =
         await showDialog(context: context, builder: (context) => CateTodo());
@@ -94,28 +99,26 @@ class _CreatepageState extends State<Createpage> {
     }
   }
 
-  // PickedFile? image;
-  // getimg() async {
-  //   image = await imagepicker.getImage(source: ImageSource.camera);
-  //   if (image != null) {
-  //     setState(() {
-  //       _image = File(image!.path);
-  //     });
-  //   }
-  // }
+  PickedFile? image;
+  getimg() async {
+    image = await imagepicker.getImage(source: ImageSource.camera);
+    if (image != null) {
+      setState(() {
+        _image = File(image!.path);
+      });
+    }
+  }
 
-  // postimg() async {
-  //   DateTime timeimage = DateTime.now();
-  //   Reference referenceRoot = FirebaseStorage.instance.ref();
-  //   Reference referenceDirImages = referenceRoot.child(_user);
-  //   Reference referenceImageToUpload =
-  //       referenceDirImages.child(timeimage.toString());
-  //   try {
-  //     await referenceImageToUpload.putFile(File(image!.path));
-  //     imageUrl = await referenceImageToUpload.getDownloadURL();
-  //     // img = imageUrl.toString();
-  //   } catch (error) {}
-  // }
+  postimg(imgid) async {
+    DateTime timeimage = DateTime.now();
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child(_user);
+    Reference referenceImageToUpload = referenceDirImages.child(imgid);
+    try {
+      await referenceImageToUpload.putFile(File(image!.path));
+      imageUrl = await referenceImageToUpload.getDownloadURL();
+    } catch (error) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -234,95 +237,47 @@ class _CreatepageState extends State<Createpage> {
             SizedBox(
               height: MediaQuery.of(context).size.width * 0.02,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 30),
-              child: Row(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.068,
-                    width: MediaQuery.of(context).size.width * 0.28,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: TextButton(
-                        onPressed: () async {
-                          // getimg();
-                          final image = await imagepicker.getImage(
-                              source: ImageSource.camera);
-                          if (image != null) {
-                            setState(() {
-                              _image = File(image.path);
-                            });
-                          }
-                          DateTime timeimage = DateTime.now();
-                          Reference referenceRoot =
-                              FirebaseStorage.instance.ref();
-                          Reference referenceDirImages =
-                              referenceRoot.child(_user);
-                          Reference referenceImageToUpload =
-                              referenceDirImages.child(timeimage.toString());
-                          try {
-                            await referenceImageToUpload
-                                .putFile(File(image!.path));
-                            imageUrl =
-                                await referenceImageToUpload.getDownloadURL();
-                            img = imageUrl.toString();
-                          } catch (error) {}
-                        },
-                        child: Image(
-                          image: AssetImage('assets/camera.png'),
-                          // width: MediaQuery.of(context).size.width*0.1,
-                          height: MediaQuery.of(context).size.height * 0.05,
-                        )),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 190,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: TextButton(
-                      onPressed: () {
-                        _showDatePicker();
-                      },
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image(
-                              image: AssetImage('assets/lich.png'),
-                              width: 40,
-                              height: 40,
-                            ),
-                            Text(
-                              startcontent!.substring(0, 10),
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.blue),
-                            ),
-                          ]),
-                    ),
-                  ),
-                ],
+            Container(
+              height: MediaQuery.of(context).size.height * 0.1,
+              width: MediaQuery.of(context).size.width * 0.85,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.circular(10)),
+              child: TextButton(
+                onPressed: () {
+                  _showDatePicker();
+                },
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image(
+                        image: AssetImage('assets/lich.png'),
+                        width: 40,
+                        height: 40,
+                      ),
+                      Text(
+                        startcontent!.substring(0, 10),
+                        style: TextStyle(fontSize: 20, color: Colors.blue),
+                      ),
+                    ]),
               ),
             ),
             SizedBox(
               height: 10,
             ),
-            _image == null
-                ? Text(
-                    '',
-                    style: TextStyle(color: Colors.black, fontSize: 15),
-                  )
-                : Image.file(
-                    _image!,
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    height: MediaQuery.of(context).size.height * 0.3,
-                  ),
-            SizedBox(
-              height: 5,
-            ),
+            // _image == null
+            //     ? Text(
+            //         '',
+            //         style: TextStyle(color: Colors.black, fontSize: 15),
+            //       )
+            //     : Image.file(
+            //         _image!,
+            //         width: MediaQuery.of(context).size.width * 0.7,
+            //         height: MediaQuery.of(context).size.height * 0.3,
+            //       ),
+            // SizedBox(
+            //   height: 5,
+            // ),
             Container(
               decoration: BoxDecoration(
                   color: Colors.green,
@@ -335,9 +290,9 @@ class _CreatepageState extends State<Createpage> {
                     if (startcontent == '') {
                       startcontent = DateFormat('yyyy-MM-dd').format(_dateTime);
                     }
-                    if (catagories == null) {
-                      catagories = 'Riêng Tư';
-                    }
+                    // if (catagories == null) {
+                    //   catagories = 'Riêng Tư';
+                    // }
                     // if (image != null) {
                     //   postimg();
                     //   noimg = true;
@@ -370,12 +325,19 @@ class _CreatepageState extends State<Createpage> {
                     //     }
                     //   }
                     // } else {
-                    if (todocontent.text.isNotEmpty) {
+
+                    // final img = await FirebaseFirestore.instance
+                    //     .collection('listtodo')
+                    //     .doc()
+                    //     .id;
+                    // postimg(img);
+                    if (todocontent.text.isNotEmpty &&
+                        this.widget.cate!.id != null) {
                       await TodoProvider().createlisttodo(
                           todocontent.text.toString(),
                           createcontent.toString(),
                           this.widget.cate!.id.toString(),
-                          imageUrl.toString(),
+                          // img.toString(),
                           startcontent.toString(),
                           uid_user.toString());
                       Navigator.pop(context);
@@ -384,7 +346,14 @@ class _CreatepageState extends State<Createpage> {
                             context: context,
                             builder: (context) => MessageTime());
                       });
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (context) => MessageErrorTime(
+                                text: 'Nhập Đủ Thông Tin',
+                              ));
                     }
+
                     // }
 
                     // errorSnackBar(

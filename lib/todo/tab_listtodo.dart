@@ -9,7 +9,6 @@ class TabTodo extends StatefulWidget {
 }
 
 class _TabtodoState extends State<TabTodo> with TickerProviderStateMixin {
-  List<String> list = <String>['Tất Cả', 'Gia Đình', 'Công Việc', 'Riêng Tư'];
   String? catagories;
   @override
   Widget build(BuildContext context) {
@@ -46,44 +45,44 @@ class _TabtodoState extends State<TabTodo> with TickerProviderStateMixin {
               SizedBox(
                 height: 5,
               ),
-              Container(
-                // width: 320,
-                height: 50,
-                // decoration: BoxDecoration(
-                //     border: Border.all(color: Colors.black),
-                //     borderRadius: BorderRadius.circular(10)),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: catagories,
-                  icon: Icon(
-                    Icons.filter_alt,
-                    color: Colors.black,
-                  ),
-                  items: list.map((e) {
-                    return DropdownMenuItem(
-                      value: e,
-                      child: Center(
-                        child: Text(
-                          '$e',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      catagories = value;
-                    });
-                  },
-                  // icon: Icon(Icons.category_outlined),
-                  hint: Center(
-                    child: const Text(
-                      'Hãy lọc ghi chú theo...',
-                      style: TextStyle(color: Colors.black, fontSize: 15),
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   // width: 320,
+              //   height: 50,
+              //   // decoration: BoxDecoration(
+              //   //     border: Border.all(color: Colors.black),
+              //   //     borderRadius: BorderRadius.circular(10)),
+              //   child: DropdownButton<String>(
+              //     isExpanded: true,
+              //     value: catagories,
+              //     icon: Icon(
+              //       Icons.filter_alt,
+              //       color: Colors.black,
+              //     ),
+              //     items: list.map((e) {
+              //       return DropdownMenuItem(
+              //         value: e,
+              //         child: Center(
+              //           child: Text(
+              //             '$e',
+              //             textAlign: TextAlign.center,
+              //           ),
+              //         ),
+              //       );
+              //     }).toList(),
+              //     onChanged: (value) {
+              //       setState(() {
+              //         catagories = value;
+              //       });
+              //     },
+              //     // icon: Icon(Icons.category_outlined),
+              //     hint: Center(
+              //       child: const Text(
+              //         'Hãy lọc ghi chú theo...',
+              //         style: TextStyle(color: Colors.black, fontSize: 15),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 4,
               ),

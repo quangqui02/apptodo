@@ -3,6 +3,7 @@ import 'package:demoapp_todo/loading.dart';
 import 'package:demoapp_todo/object/todo.dart';
 import 'package:demoapp_todo/object/todo_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
@@ -45,6 +46,14 @@ class _TodoPageTrueState extends State<TodoPageTrue> {
 
   final CollectionReference todo =
       FirebaseFirestore.instance.collection('listtodo');
+  final _user = FirebaseAuth.instance.currentUser!.uid;
+  String? urlimg;
+  void getdownurl(uid, imgurl) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    final imageRef = storageRef.child('$_user/$imgurl');
+
+    imageRef.getDownloadURL().then((url) => {urlimg = url});
+  }
 
   String updateList = '';
   String uid_todo = '';
@@ -84,6 +93,8 @@ class _TodoPageTrueState extends State<TodoPageTrue> {
                     child: ListView.builder(
                         itemCount: todos!.length,
                         itemBuilder: (BuildContext context, int index) {
+                          getdownurl(todos[index].uid, todos[index].img);
+
                           return Slidable(
                               key: Key(todos[index].content!),
                               startActionPane: ActionPane(
@@ -133,120 +144,64 @@ class _TodoPageTrueState extends State<TodoPageTrue> {
                                       border: Border.all(color: Colors.black),
                                       borderRadius: BorderRadius.circular(10)),
                                   child: ListTile(
-                                    // leading: Image(
-                                    //   image: i('assets/todo.png'),
-                                    //   width: 70,
-                                    //   height: 70,
-                                    // ),
-
-                                    leading: todos[index].img == ''
-                                        ? Image(
-                                            image:
-                                                AssetImage('assets/todo.png'))
-                                        : Image.network(
-                                            todos[index].img!,
-                                            width: 60,
-                                            height: 60,
-                                          ),
-                                    title: todos[index].content!.length >= 15
-                                        ? Text(
-                                            todos[index]
-                                                    .content!
-                                                    .substring(0, 15) +
-                                                '...',
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        : Text(
-                                            todos[index].content!,
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                    subtitle: Text(
-                                      todos[index].startcontent!,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black,
+                                      onTap: () {
+                                        setState(() {
+                                          urlimg;
+                                        });
+                                      },
+                                      leading: Image(
+                                          image: AssetImage('assets/todo.png')),
+                                      title: todos[index].content!.length >= 15
+                                          ? Text(
+                                              todos[index]
+                                                      .content!
+                                                      .substring(0, 15) +
+                                                  '...',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          : Text(
+                                              todos[index].content!,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                      subtitle: Text(
+                                        todos[index].startcontent!,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                    trailing: IconButton(
+                                      trailing: IconButton(
                                         icon: Icon(
                                           Icons.more_vert_rounded,
                                           color: Colors.black,
                                         ),
                                         onPressed: () {
-                                          getcate(todos[index].category);
-                                          if (namecate != null) {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) => DetailTodo(
-                                                    status:
-                                                        todos[index].status!,
-                                                    content:
-                                                        todos[index].content!,
-                                                    uid: todos[index].uid!,
-                                                    category: namecate!,
-                                                    img: todos[index].img!,
-                                                    start: todos[index]
-                                                        .startcontent!,
-                                                    create: todos[index]
-                                                        .content_create_time!));
-                                          } else {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) => DetailTodo(
-                                                    status:
-                                                        todos[index].status!,
-                                                    content:
-                                                        todos[index].content!,
-                                                    uid: todos[index].uid!,
-                                                    category:
-                                                        todos[index].category!,
-                                                    img: todos[index].img!,
-                                                    start: todos[index]
-                                                        .startcontent!,
-                                                    create: todos[index]
-                                                        .content_create_time!));
-                                          }
-                                        }),
-                                  )));
+                                          // getcate(todos[index].category);
+
+                                          // if (namecate != '') {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) => DetailTodo(
+                                                  status: todos[index].status!,
+                                                  content:
+                                                      todos[index].content!,
+                                                  uid: todos[index].uid!,
+                                                  // category: namecate!,
+                                                  // img: urlimg!,
+                                                  start: todos[index]
+                                                      .startcontent!,
+                                                  create: todos[index]
+                                                      .content_create_time!));
+                                        },
+                                      ))));
                         }),
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.end,
-                  //   children: [
-                  //     Container(
-                  //       decoration: BoxDecoration(
-                  //           border:
-                  //               Border.all(color: Color.fromARGB(255, 0, 0, 0)),
-                  //           borderRadius: BorderRadius.circular(20),
-                  //           color: Color.fromARGB(255, 0, 225, 255)),
-                  //       child: TextButton(
-                  //         onPressed: () {
-                  //           Navigator.push(
-                  //             context,
-                  //             MaterialPageRoute(
-                  //                 builder: (context) => Createpage()),
-                  //           );
-                  //         },
-                  //         child: Text(
-                  //           '+ Ghi Chú',
-                  //           style: TextStyle(
-                  //               fontSize: 20,
-                  //               fontWeight: FontWeight.bold,
-                  //               color: Colors.white),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     SizedBox(
-                  //       width: 30,
-                  //     )
-                  //   ],
-                  // )
                 ],
               );
             }),
@@ -341,16 +296,16 @@ class DetailTodo extends StatefulWidget {
       required this.status,
       required this.content,
       required this.uid,
-      required this.category,
-      required this.img,
+      // required this.category,
+      // required this.img,
       required this.start,
       required this.create})
       : super(key: key);
   bool status;
   String content;
   String uid;
-  String category;
-  String img;
+  // String category;
+  // String img;
   String start;
   String create;
   @override
@@ -439,18 +394,18 @@ class _DetailTodoState extends State<DetailTodo> {
                                 SizedBox(
                                   width: 10,
                                 ),
-                                Container(
-                                  width: size.width * 0.38,
-                                  height: size.height * 0.2,
-                                  child: this.widget.img == ''
-                                      ? Image(
-                                          image: AssetImage('assets/todo.png'))
-                                      : Image.network(
-                                          '${this.widget.img}',
-                                          width: 70,
-                                          height: 70,
-                                        ),
-                                )
+                                // Container(
+                                //   width: size.width * 0.38,
+                                //   height: size.height * 0.2,
+                                //   child: this.widget.img == ''
+                                //       ? Image(
+                                //           image: AssetImage('assets/todo.png'))
+                                //       : Image.network(
+                                //           '${this.widget.img}',
+                                //           width: 70,
+                                //           height: 70,
+                                //         ),
+                                // )
                               ],
                             ),
                           ),
@@ -458,30 +413,30 @@ class _DetailTodoState extends State<DetailTodo> {
                         SizedBox(
                           height: 10,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Row(
-                            children: [
-                              Text(
-                                'Danh Mục:',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                '${this.widget.category}',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 20),
+                        //   child: Row(
+                        //     children: [
+                        //       Text(
+                        //         'Danh Mục:',
+                        //         style: TextStyle(
+                        //           color: Colors.black,
+                        //           fontSize: 15,
+                        //         ),
+                        //       ),
+                        //       SizedBox(
+                        //         width: 10,
+                        //       ),
+                        //       Text(
+                        //         '${this.widget.category}',
+                        //         style: TextStyle(
+                        //             color: Colors.black,
+                        //             fontSize: 20,
+                        //             fontWeight: FontWeight.bold),
+                        //       )
+                        //     ],
+                        //   ),
+                        // ),
                         SizedBox(
                           height: 10,
                         ),

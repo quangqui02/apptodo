@@ -42,7 +42,7 @@ class _ListCateState extends State<ListCate> {
             SizedBox(
               width: size.width * 0.27,
             ),
-            Text(
+            const Text(
               'Danh Mục',
               style: TextStyle(
                   color: Color.fromARGB(255, 0, 0, 0),
@@ -98,42 +98,34 @@ class _ListCateState extends State<ListCate> {
                               ],
                             ),
                             child: Container(
-                                margin: EdgeInsets.only(
-                                    left: 20, right: 20, bottom: 10),
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: TextButton(
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Image(
-                                          image: AssetImage(
-                                              'assets/' + cates[index].icon!),
-                                          width: 50,
-                                          height: 50,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          cates[index].name!,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ]),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Createpage(
-                                                timecreate: null,
-                                                cate: cates[index])));
-                                  },
-                                )));
+                              height: size.height * 0.1,
+                              margin: const EdgeInsets.only(
+                                  left: 20, right: 20, bottom: 10),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Image(
+                                      image: AssetImage(
+                                          'assets/' + cates[index].icon!),
+                                      width: 60,
+                                      height: 60,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      cates[index].name!,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ]),
+                            ));
                       });
                 }),
           ),
@@ -155,7 +147,7 @@ class _ListCateState extends State<ListCate> {
                           MaterialPageRoute(
                               builder: (context) => CreateCate()));
                     },
-                    child: Row(children: [
+                    child: Row(children: const [
                       Image(
                         image: AssetImage('assets/cateadd.png'),
                         width: 40,
@@ -195,7 +187,7 @@ class _ListCateState extends State<ListCate> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Center(
-                      child: Text(
+                      child: const Text(
                         'Bạn Có Muốn Xóa Tài Khoản?',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -219,7 +211,7 @@ class _ListCateState extends State<ListCate> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Hủy',
                                   style: TextStyle(
                                       color: Colors.white,
@@ -240,7 +232,7 @@ class _ListCateState extends State<ListCate> {
                                   await CateProvider().delelecate(id);
                                   Navigator.pop(context);
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Đồng Ý',
                                   style: TextStyle(
                                       color: Colors.white,

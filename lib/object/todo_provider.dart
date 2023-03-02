@@ -47,13 +47,19 @@ class TodoProvider {
       FirebaseFirestore.instance.collection('listtodo');
 
   final todocreate = FirebaseFirestore.instance.collection('listtodo').doc();
-  Future createlisttodo(String content, String content_create_time,
-      String category, String img, String startcontent, String uid_user) async {
+  Future createlisttodo(
+    String content,
+    String content_create_time,
+    String category,
+    // String img,
+    String startcontent,
+    String uid_user,
+  ) async {
     return await todocollection.add({
       "content": content,
       "content-create-time": content_create_time,
       "category": category,
-      "img": img,
+      // "img": img,
       "startcontent": startcontent,
       "uid_user": uid_user,
       "status": false,
@@ -89,7 +95,7 @@ class TodoProvider {
           content: (e.data() as dynamic)['content'],
           content_create_time: (e.data() as dynamic)['content-create-time'],
           startcontent: (e.data() as dynamic)['startcontent'],
-          img: (e.data() as dynamic)['img'],
+          // img: (e.data() as dynamic)['img'],
           category: (e.data() as dynamic)['category'],
         );
       }).toList();

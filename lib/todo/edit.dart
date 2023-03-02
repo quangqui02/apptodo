@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp_todo/error/message.dart';
+import 'package:demoapp_todo/object/category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,37 +10,29 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import 'catetodo.dart';
+
 class EditTodo extends StatefulWidget {
   EditTodo({
     Key? key,
     required this.content,
     required this.uid,
-    required this.category,
     required this.start,
+    required this.category,
   }) : super(key: key);
-  // EditTodo(
-  //     {Key? key,
-  //     required this.status,
-  //     required this.content,
-  //     required this.uid,
-  //     required this.category,
-  //     required this.img,
-  //     required this.start,
-  //     required this.create})
-  //     : super(key: key);
-  // bool status;
+
   String content;
   String uid;
   String category;
-  // String img;
+
   String start;
-  // String create;
 
   @override
   State<EditTodo> createState() => _EditTodoState();
 }
 
 class _EditTodoState extends State<EditTodo> {
+  Cate? cate;
   final _user = FirebaseAuth.instance.currentUser!.uid;
   TextEditingController updatecontent = TextEditingController();
   static DateTime _dateTime = DateTime.now();
@@ -64,7 +57,23 @@ class _EditTodoState extends State<EditTodo> {
     if (this.widget.start != _dateTime.toString().substring(0, 10)) {
       startcontent = this.widget.start;
     }
+    getcate();
     super.initState();
+  }
+
+  Future<dynamic> getcate() async {
+    FirebaseFirestore.instance
+        .collection('category')
+        .doc(catagories)
+        .get()
+        .then((snapshot) async {
+      if (snapshot.exists) {
+        setState(() {
+          namecate = snapshot.data()!['name'];
+          iconcate = snapshot.data()!['icon'];
+        });
+      }
+    });
   }
 
   Future<void> updatetodo(uid_todo) {
@@ -91,7 +100,7 @@ class _EditTodoState extends State<EditTodo> {
         .catchError((error) => print("Failed to update user: $error"));
   }
 
-  Future<void> updatecategory(uid_todo, String dm) {
+  Future<void> updatecategory(uid_todo, dm) {
     return todo
         .doc(uid_todo)
         .update({'category': dm})
@@ -105,6 +114,21 @@ class _EditTodoState extends State<EditTodo> {
         .update({'img': anh})
         .then((value) => print("User Updated"))
         .catchError((error) => print("Failed to update user: $error"));
+  }
+
+  String? iconcate;
+  String? namecate;
+  _navigator(BuildContext context) async {
+    dynamic result =
+        await showDialog(context: context, builder: (context) => CateTodo());
+    if (result != null) {
+      setState(() {
+        cate = result;
+        catagories = cate!.id;
+        iconcate = cate!.icon;
+        namecate = cate!.name;
+      });
+    }
   }
 
   @override
@@ -127,10 +151,10 @@ class _EditTodoState extends State<EditTodo> {
                           color: Colors.white),
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
-                          Center(
+                          const Center(
                             child: Text(
                               'Chỉnh Sửa',
                               style: TextStyle(
@@ -139,7 +163,7 @@ class _EditTodoState extends State<EditTodo> {
                                   fontWeight: FontWeight.bold),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Center(
@@ -155,7 +179,7 @@ class _EditTodoState extends State<EditTodo> {
                                       decoration: InputDecoration(
                                         filled: true,
                                         border: UnderlineInputBorder(
-                                            borderSide: BorderSide(
+                                            borderSide: const BorderSide(
                                                 color: Color.fromARGB(
                                                     255, 0, 0, 0)),
                                             borderRadius:
@@ -167,53 +191,63 @@ class _EditTodoState extends State<EditTodo> {
                                             color:
                                                 Colors.black.withOpacity(0.6)),
                                       ),
-                                      style: TextStyle(color: Colors.black),
+                                      style:
+                                          const TextStyle(color: Colors.black),
                                       maxLines: 5,
                                     ),
                                   ],
                                 )),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Container(
-                              width: 250,
-                              height: 50,
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.068,
                               decoration: BoxDecoration(
                                   border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)),
-                              child: DropdownButton<String>(
-                                isExpanded: true,
-                                value: catagories,
-                                items: list.map((e) {
-                                  return DropdownMenuItem(
-                                    value: e,
-                                    child: Center(
-                                        child:
-                                            // catagories != null
-                                            //     ? Text(
-                                            //         catagories!,
-                                            //         textAlign: TextAlign.center,
-                                            //       )
-                                            //     :
-                                            Text(
-                                      '$e',
-                                      textAlign: TextAlign.center,
-                                    )),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    catagories = value;
-                                  });
-                                },
-                                hint: Center(
-                                  child: const Text(
-                                    'Danh Mục',
-                                  ),
+                              child: TextButton(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    iconcate == null
+                                        ? const Image(
+                                            image: AssetImage(
+                                                'assets/catetodo.png'),
+                                            width: 40,
+                                            height: 40,
+                                          )
+                                        : Image(
+                                            image: AssetImage('assets/' +
+                                                iconcate.toString()),
+                                            width: 40,
+                                            height: 40,
+                                          ),
+                                    namecate == null
+                                        ? const Text(
+                                            'Chọn Danh Mục',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          )
+                                        : Text(
+                                            namecate.toString(),
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          ),
+                                  ],
                                 ),
+                                onPressed: () {
+                                  _navigator(context);
+                                },
                               )),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Padding(
@@ -249,15 +283,15 @@ class _EditTodoState extends State<EditTodo> {
                                               await referenceImageToUpload
                                                   .getDownloadURL();
                                         } catch (error) {}
-                                        img = imageUrl.toString();
+                                        // img = imageUrl.toString();
                                       },
-                                      child: Image(
+                                      child: const Image(
                                         image: AssetImage('assets/camera.png'),
                                         width: 50,
                                         height: 40,
                                       )),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 5,
                                 ),
                                 Container(
@@ -271,14 +305,14 @@ class _EditTodoState extends State<EditTodo> {
                                       _showDatePicker();
                                     },
                                     child: Row(children: [
-                                      Image(
+                                      const Image(
                                         image: AssetImage('assets/lich.png'),
                                         width: 40,
                                         height: 40,
                                       ),
                                       Text(
                                         startcontent,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 20, color: Colors.blue),
                                       ),
                                     ]),
@@ -287,11 +321,11 @@ class _EditTodoState extends State<EditTodo> {
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           _image == null
-                              ? Text(
+                              ? const Text(
                                   '',
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15),
@@ -303,7 +337,7 @@ class _EditTodoState extends State<EditTodo> {
                                   height:
                                       MediaQuery.of(context).size.height * 0.3,
                                 ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Row(
@@ -322,8 +356,8 @@ class _EditTodoState extends State<EditTodo> {
                                       onPressed: () {
                                         updateList = updatecontent.text;
 
-                                        if (img != '') {
-                                          updateimg(this.widget.uid, img);
+                                        if (imageUrl != '') {
+                                          updateimg(this.widget.uid, imageUrl);
                                         }
                                         if (updateList != '') {
                                           updatetodo(this.widget.uid);
@@ -348,7 +382,7 @@ class _EditTodoState extends State<EditTodo> {
                                             builder: (context) =>
                                                 MessageTime());
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'Thay Đổi',
                                         style: TextStyle(
                                             color: Colors.white,
@@ -369,7 +403,7 @@ class _EditTodoState extends State<EditTodo> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       'Hủy',
                                       style: TextStyle(
                                           color: Colors.white,
@@ -396,7 +430,7 @@ class _EditTodoState extends State<EditTodo> {
             builder: (context, child) {
               return Theme(
                   data: Theme.of(context).copyWith(
-                    colorScheme: ColorScheme.light(
+                    colorScheme: const ColorScheme.light(
                         primary: Colors.blue,
                         onPrimary: Colors.white,
                         onSurface: Color.fromARGB(255, 0, 0, 0),

@@ -13,66 +13,12 @@ import 'package:lottie/lottie.dart';
 
 class MessageTime extends StatefulWidget {
   MessageTime({super.key});
-  // EditTodo(
-  //     {Key? key,
-  //     required this.status,
-  //     required this.content,
-  //     required this.uid,
-  //     required this.category,
-  //     required this.img,
-  //     required this.start,
-  //     required this.create})
-  //     : super(key: key);
-  // bool status;
-  // String text;
-  // String uid;
-  // String category;
-  // // String img;
-  // String start;
-  // String create;
 
   @override
   State<MessageTime> createState() => _EditTodoState();
 }
 
 class _EditTodoState extends State<MessageTime> {
-  // final _user = FirebaseAuth.instance.currentUser!.uid;
-  // TextEditingController updatecontent = TextEditingController();
-  // static DateTime _dateTime = DateTime.now();
-  // String _picture = 'todo.png';
-  // final imagepicker = ImagePicker();
-  // DateTime _date = DateTime.now();
-  // String imageUrl = '';
-  // String img = '';
-  // File? _image;
-  // String updateList = '';
-  // String uid_todo = '';
-  // List<String> list = <String>['Gia Đình', 'Công Việc', 'Riêng Tư'];
-  // String? catagories;
-  // bool stick = false;
-  // String? starttime;
-  @override
-  void initState() {
-    setState(() {
-      poptime();
-      setState(() {});
-    });
-    super.initState();
-  }
-
-  poptime() {
-    setState(() {
-      if (seconds > 0) {
-        seconds--;
-      }
-      if (seconds == 0) {
-        Navigator.pop(context);
-      }
-    });
-  }
-
-  int seconds = 5;
-  // Timer? timer;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

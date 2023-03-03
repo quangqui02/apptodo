@@ -2,6 +2,7 @@ import 'package:demoapp_todo/object/cate_provider.dart';
 import 'package:demoapp_todo/object/category.dart';
 import 'package:demoapp_todo/todo/create.dart';
 import 'package:demoapp_todo/todo/createcate.dart';
+import 'package:demoapp_todo/todo/editcate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -89,7 +90,13 @@ class _ListCateState extends State<ListCate> {
                               children: [
                                 SlidableAction(
                                   flex: 1,
-                                  onPressed: (context) => {},
+                                  onPressed: (context) => {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => EditCate(
+                                              cate: cates[index],
+                                            ))
+                                  },
                                   backgroundColor: Color(0xFF7BC043),
                                   foregroundColor: Colors.white,
                                   icon: Icons.edit_calendar_outlined,
@@ -188,7 +195,7 @@ class _ListCateState extends State<ListCate> {
                   children: [
                     Center(
                       child: const Text(
-                        'Bạn Có Muốn Xóa Tài Khoản?',
+                        'Bạn Có Muốn Xóa Danh Mục?',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black,

@@ -189,11 +189,11 @@ class _CreatepageState extends State<Createpage> {
                   )),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.01,
+              height: MediaQuery.of(context).size.height * 0.02,
             ),
             Container(
                 width: MediaQuery.of(context).size.width * 0.85,
-                height: MediaQuery.of(context).size.height * 0.068,
+                height: MediaQuery.of(context).size.height * 0.08,
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                     borderRadius: BorderRadius.circular(10)),
@@ -263,7 +263,7 @@ class _CreatepageState extends State<Createpage> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: MediaQuery.of(context).size.width * 0.1,
             ),
             // _image == null
             //     ? Text(

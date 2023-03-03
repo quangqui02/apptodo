@@ -38,9 +38,11 @@ class MyApp extends StatelessWidget {
       //     FirebaseAuth.instance.currentUser == null ? 'welcome' : 'home',
       // routes: {
       //   'welcome': (context) => WelcomePage(),
-      //   'home': (context) => HomePage(),
-      // },
+      //   'home': (context) => HomePage(),      // },
       home: WelcomePage(),
     );
   }
 }
+
+
+// keytool -exportcert -alias androiddebugkey -keystore "C:\Users\ADMIN\.android\debug.keystore" | "D:\setting\bin\openssl" sha1 -binary | "D:\setting\bin\openssl" base64

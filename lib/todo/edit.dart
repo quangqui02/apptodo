@@ -144,7 +144,7 @@ class _EditTodoState extends State<EditTodo> {
                   padding: EdgeInsets.only(left: 30, top: 100),
                   child: Container(
                       width: 300,
-                      height: _image == null ? 400 : 570,
+                      height: 400,
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(10),
@@ -250,75 +250,31 @@ class _EditTodoState extends State<EditTodo> {
                           const SizedBox(
                             height: 5,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 25),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 50,
-                                  width: 65,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: TextButton(
-                                      onPressed: () async {
-                                        final image =
-                                            await imagepicker.getImage(
-                                                source: ImageSource.camera);
-                                        setState(() {
-                                          _image = File(image!.path);
-                                        });
-                                        DateTime timeimage = DateTime.now();
-                                        Reference referenceRoot =
-                                            FirebaseStorage.instance.ref();
-                                        Reference referenceDirImages =
-                                            referenceRoot.child(_user);
-                                        Reference referenceImageToUpload =
-                                            referenceDirImages
-                                                .child(timeimage.toString());
-                                        try {
-                                          await referenceImageToUpload
-                                              .putFile(File(image!.path));
-                                          imageUrl =
-                                              await referenceImageToUpload
-                                                  .getDownloadURL();
-                                        } catch (error) {}
-                                        // img = imageUrl.toString();
-                                      },
-                                      child: const Image(
-                                        image: AssetImage('assets/camera.png'),
-                                        width: 50,
-                                        height: 40,
-                                      )),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Container(
-                                  height: 50,
-                                  width: 180,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: TextButton(
-                                    onPressed: () {
-                                      _showDatePicker();
-                                    },
-                                    child: Row(children: [
-                                      const Image(
-                                        image: AssetImage('assets/lich.png'),
-                                        width: 40,
-                                        height: 40,
-                                      ),
-                                      Text(
-                                        startcontent,
-                                        style: const TextStyle(
-                                            fontSize: 20, color: Colors.blue),
-                                      ),
-                                    ]),
-                                  ),
-                                ),
-                              ],
+                          Container(
+                            height: size.height * 0.07,
+                            width: size.width * 0.7,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: TextButton(
+                              onPressed: () {
+                                _showDatePicker();
+                              },
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    const Image(
+                                      image: AssetImage('assets/lich.png'),
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                    Text(
+                                      startcontent,
+                                      style: const TextStyle(
+                                          fontSize: 20, color: Colors.blue),
+                                    ),
+                                  ]),
                             ),
                           ),
                           const SizedBox(

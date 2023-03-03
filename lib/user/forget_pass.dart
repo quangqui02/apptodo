@@ -1,4 +1,6 @@
+import 'package:demoapp_todo/error/messageerror.dart';
 import 'package:demoapp_todo/object/todo_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
@@ -110,8 +112,16 @@ class _ForgetPassState extends State<ForgetPass> {
                         borderRadius: BorderRadius.circular(20)),
                     child: TextButton(
                         onPressed: () {
-                          TodoProvider().forgetpass(_email.text);
-                          Navigator.pop(context);
+                          if (_email.text.isNotEmpty) {
+                            TodoProvider().forgetpass(_email.text);
+                            Navigator.pop(context);
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (context) => MessageErrorTime(
+                                      text: 'Nhập Đủ Thông Tin',
+                                    ));
+                          }
                         },
                         child: Text(
                           'Gửi',
@@ -125,5 +135,88 @@ class _ForgetPassState extends State<ForgetPass> {
         )
       ]),
     );
+  }
+
+  void signUp(String email) async {
+    try {
+      if (_email.text.isNotEmpty) {
+        TodoProvider().forgetpass(_email.text);
+        Navigator.pop(context);
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) => MessageErrorTime(
+                  text: 'Nhập Đủ Thông Tin',
+                ));
+      }
+    } on FirebaseAuthException catch (error) {
+      print(error);
+      print(error.code);
+      switch (error.code) {
+        case "invalid-email":
+          showDialog(
+              context: context,
+              builder: (context) => MessageErrorTime(
+                    text: 'Email Không Hợp Lệ',
+                  ));
+          break;
+        case "unknown":
+          showDialog(
+              context: context,
+              builder: (context) => MessageErrorTime(
+                    text: 'Nhập Đủ Thông Tin',
+                  ));
+          break;
+        case "email-already-in-use":
+          showDialog(
+              context: context,
+              builder: (context) => MessageErrorTime(
+                    text: 'Email Đã Đươc Sử Dụng',
+                  ));
+          break;
+        case "user-not-found":
+          showDialog(
+              context: context,
+              builder: (context) => MessageErrorTime(
+                    text: 'Email Không Tồn Tại',
+                  ));
+          break;
+        case "user-disabled":
+          showDialog(
+              context: context,
+              builder: (context) => MessageErrorTime(
+                    text: 'Email Vô Hiệu Hóa',
+                  ));
+          break;
+        case "too-many-requests":
+          showDialog(
+              context: context,
+              builder: (context) => MessageErrorTime(
+                    text: 'Quá Nhiều Yêu Cầu',
+                  ));
+          break;
+        case "operation-not-allowed":
+          showDialog(
+              context: context,
+              builder: (context) => MessageErrorTime(
+                    text: 'Tài Khoản Không Kích Hoạt',
+                  ));
+          break;
+        case "weak-password":
+          showDialog(
+              context: context,
+              builder: (context) => MessageErrorTime(
+                    text: 'Mật Khẩu Trên 6 Ký Tự',
+                  ));
+          break;
+        default:
+          showDialog(
+              context: context,
+              builder: (context) => MessageErrorTime(
+                    text: 'Lỗi Không Xác Định',
+                  ));
+          break;
+      }
+    }
   }
 }

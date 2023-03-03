@@ -7,6 +7,7 @@ import 'package:demoapp_todo/object/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 
 import '../error/message.dart';
@@ -50,31 +51,35 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       //resizeToAvoidBottomInset: false,
       body: Container(
+        width: size.width * 1,
+        height: size.height * 1,
         color: Color.fromARGB(255, 255, 255, 255),
         child: ListView(
           children: [
             Column(children: [
               SizedBox(
-                height: 80,
+                height: size.height * 0.1,
               ),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Lottie.asset('assets/2.json', height: 190),
+                    Lottie.asset('assets/2.json', height: size.height * 0.24),
                     Image(
                       image: AssetImage('assets/todo.png'),
-                      height: 150,
-                      width: 130,
+                      height: size.height * 0.25,
+                      width: size.width * 0.35,
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                height: 80,
+                height: size.height * 0.1,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: Text(
@@ -87,9 +92,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(
-                height: 50,
+                height: size.height * 0.08,
                 child: Container(
-                  width: 300,
+                  width: size.width * 0.8,
                   child: Material(
                     elevation: 8,
                     shadowColor: Colors.black87,
@@ -127,12 +132,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: size.height * 0.01,
               ),
               SizedBox(
-                height: 50,
+                height: size.height * 0.08,
                 child: Container(
-                  width: 300,
+                  width: size.width * 0.8,
                   child: Material(
                     elevation: 8,
                     shadowColor: Colors.black87,
@@ -179,12 +184,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: size.height * 0.01,
               ),
               SizedBox(
-                height: 50,
+                height: size.height * 0.08,
                 child: Container(
-                  width: 300,
+                  width: size.width * 0.8,
                   child: Material(
                     elevation: 8,
                     shadowColor: Colors.black87,
@@ -211,7 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(
-                height: 30,
+                height: size.height * 0.02,
               ),
               TextButton(
                 onPressed: () async {
@@ -219,8 +224,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
                 child: Container(
                   alignment: Alignment.center,
-                  width: 180,
-                  height: 50,
+                  width: size.width * 0.5,
+                  height: size.height * 0.07,
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black),
                       borderRadius: BorderRadius.circular(20),
@@ -235,7 +240,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(
-                height: 50,
+                height: size.height * 0.08,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -363,8 +368,6 @@ class _RegisterPageState extends State<RegisterPage> {
           _password.text.isNotEmpty &&
           _name.text.isNotEmpty) {
         if (_name.text.length <= 20) {
-          //   if (RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(email)) {
-          //     if (_password.text.length >= 6) {
           await _auth
               .createUserWithEmailAndPassword(email: email, password: password)
               .then((value) => {
@@ -374,20 +377,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     showDialog(
                         context: context, builder: (context) => MessageTime()),
                   });
-          //     } else {
-          //       showDialog(
-          //           context: context,
-          //           builder: (context) => MessageErrorTime(
-          //                 text: 'Password Nhiều Hơn 5 Ký Tự',
-          //               ));
-          //     }
-          //   } else {
-          //     showDialog(
-          //         context: context,
-          //         builder: (context) => MessageErrorTime(
-          //               text: 'Email Sai Định Dạng',
-          //             ));
-          //   }
         } else {
           showDialog(
               context: context,

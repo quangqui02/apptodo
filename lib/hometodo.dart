@@ -525,7 +525,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Center(
                       child: Text(
-                        'Bạn Có Muốn Xóa Tài Khoản?',
+                        'Bạn Có Muốn Ghi Chú?',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black,

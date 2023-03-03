@@ -14,19 +14,22 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
+        height: size.height * 1,
+        width: size.height * 1,
         color: Color.fromARGB(255, 255, 255, 255),
         child: Column(children: [
           SizedBox(
-            height: 50,
+            height: size.height * 0.1,
           ),
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Lottie.asset('assets/welcome.json', height: 100),
+                Lottie.asset('assets/welcome.json', height: size.height * 0.13),
               ],
             ),
           ),
@@ -34,12 +37,12 @@ class _WelcomePageState extends State<WelcomePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Lottie.asset('assets/login2.json', height: 250),
+                Lottie.asset('assets/login2.json', height: size.height * 0.35),
               ],
             ),
           ),
           SizedBox(
-            height: 50,
+            height: size.height * 0.07,
           ),
           TextButton(
               onPressed: () {
@@ -48,8 +51,8 @@ class _WelcomePageState extends State<WelcomePage> {
               },
               child: Container(
                   alignment: Alignment.center,
-                  width: 220,
-                  height: 50,
+                  width: size.width * 0.6,
+                  height: size.height * 0.08,
                   decoration: BoxDecoration(
                       border: Border.all(color: Color.fromARGB(255, 0, 0, 0)),
                       borderRadius: BorderRadius.circular(20),
@@ -62,7 +65,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         color: Color.fromARGB(255, 0, 0, 0)),
                   ))),
           SizedBox(
-            height: 10,
+            height: size.height * 0.008,
           ),
           TextButton(
               onPressed: () {
@@ -71,8 +74,8 @@ class _WelcomePageState extends State<WelcomePage> {
               },
               child: Container(
                   alignment: Alignment.center,
-                  width: 220,
-                  height: 50,
+                  width: size.width * 0.6,
+                  height: size.height * 0.08,
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black),
                       borderRadius: BorderRadius.circular(20),

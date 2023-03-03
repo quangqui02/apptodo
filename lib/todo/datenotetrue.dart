@@ -25,14 +25,14 @@ class _DateNoteTState extends State<DateNoteT> {
 
   final CollectionReference todo =
       FirebaseFirestore.instance.collection('listtodo');
-  String? urlimg;
-  final _user = FirebaseAuth.instance.currentUser!.uid;
-  void getdownurl(uid, imgurl) async {
-    final storageRef = FirebaseStorage.instance.ref();
-    final imageRef = storageRef.child('$_user/$imgurl');
+  // String? urlimg;
+  // final _user = FirebaseAuth.instance.currentUser!.uid;
+  // void getdownurl(uid, imgurl) async {
+  //   final storageRef = FirebaseStorage.instance.ref();
+  //   final imageRef = storageRef.child('$_user/$imgurl');
 
-    imageRef.getDownloadURL().then((url) => {urlimg = url});
-  }
+  //   imageRef.getDownloadURL().then((url) => {urlimg = url});
+  // }
 
   String updateList = '';
   String uid_todo = '';
@@ -87,7 +87,7 @@ class _DateNoteTState extends State<DateNoteT> {
                     child: ListView.builder(
                         itemCount: todos!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          getdownurl(todos[index].uid, todos[index].img);
+                          // getdownurl(todos[index].uid, todos[index].img);
                           return Slidable(
                               key: Key(todos[index].content!),
                               startActionPane: ActionPane(
@@ -235,7 +235,7 @@ class _DateNoteTState extends State<DateNoteT> {
                   children: [
                     Center(
                       child: Text(
-                        'Bạn Có Muốn Xóa Tài Khoản?',
+                        'Bạn Có Muốn Ghi Chú?',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black,

@@ -47,33 +47,36 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       //resizeToAvoidBottomInset: false,
       body: Container(
+        width: size.width * 1,
+        height: size.height * 1,
         color: Color.fromARGB(255, 255, 255, 255),
         child: ListView(
           children: [
             Column(children: [
               SizedBox(
-                height: 80,
+                height: size.height * 0.1,
               ),
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Lottie.asset('assets/2.json', height: 190),
+                    Lottie.asset('assets/2.json', height: size.height * 0.24),
                     Image(
                       image: AssetImage('assets/todo.png'),
-                      height: 150,
-                      width: 130,
+                      height: size.height * 0.25,
+                      width: size.width * 0.35,
                     ),
                   ],
                 ),
               ),
               SizedBox(
-                height: 80,
+                height: size.height * 0.1,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 10),
                   child: Text(
                     'Đăng Nhập',
                     style: TextStyle(
@@ -84,9 +87,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(
-                height: 50,
+                height: size.height * 0.08,
                 child: Container(
-                  width: 300,
+                  width: size.width * 0.8,
                   child: Material(
                     elevation: 8,
                     shadowColor: Colors.black87,
@@ -120,12 +123,12 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: size.height * 0.01,
               ),
               SizedBox(
-                height: 50,
+                height: size.height * 0.08,
                 child: Container(
-                  width: 300,
+                  width: size.width * 0.8,
                   child: Material(
                     elevation: 8,
                     shadowColor: Colors.black87,
@@ -187,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(
-                height: 40,
+                height: size.height * 0.04,
               ),
               TextButton(
                   onPressed: () {
@@ -195,8 +198,8 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Container(
                       alignment: Alignment.center,
-                      width: 180,
-                      height: 50,
+                      width: size.width * 0.5,
+                      height: size.height * 0.07,
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(20),
@@ -209,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.white),
                       ))),
               SizedBox(
-                height: 50,
+                height: size.height * 0.085,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

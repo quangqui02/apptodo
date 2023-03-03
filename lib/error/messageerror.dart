@@ -16,51 +16,14 @@ class MessageErrorTime extends StatefulWidget {
     Key? key,
     required this.text,
   }) : super(key: key);
-  // EditTodo(
-  //     {Key? key,
-  //     required this.status,
-  //     required this.content,
-  //     required this.uid,
-  //     required this.category,
-  //     required this.img,
-  //     required this.start,
-  //     required this.create})
-  //     : super(key: key);
-  // bool status;
+
   String text;
-  // String uid;
-  // String category;
-  // // String img;
-  // String start;
-  // String create;
 
   @override
   State<MessageErrorTime> createState() => _MessageErrorTimeState();
 }
 
 class _MessageErrorTimeState extends State<MessageErrorTime> {
-  @override
-  void initState() {
-    setState(() {
-      poptime();
-      setState(() {});
-    });
-    super.initState();
-  }
-
-  poptime() {
-    setState(() {
-      if (seconds > 0) {
-        seconds--;
-      }
-      if (seconds == 0) {
-        Navigator.pop(context);
-      }
-    });
-  }
-
-  int seconds = 5;
-  // Timer? timer;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

@@ -26,14 +26,14 @@ class _DateNoteFState extends State<DateNoteF> {
   final CollectionReference todo =
       FirebaseFirestore.instance.collection('listtodo');
   String? namecate = '';
-  String? urlimg;
-  final _user = FirebaseAuth.instance.currentUser!.uid;
-  void getdownurl(uid, imgurl) async {
-    final storageRef = FirebaseStorage.instance.ref();
-    final imageRef = storageRef.child('$_user/$imgurl');
+  // String? urlimg;
+  // final _user = FirebaseAuth.instance.currentUser!.uid;
+  // void getdownurl(uid, imgurl) async {
+  //   final storageRef = FirebaseStorage.instance.ref();
+  //   final imageRef = storageRef.child('$_user/$imgurl');
 
-    imageRef.getDownloadURL().then((url) => {urlimg = url});
-  }
+  //   imageRef.getDownloadURL().then((url) => {urlimg = url});
+  // }
 
   Future<dynamic> getcate(uid) async {
     await FirebaseFirestore.instance
@@ -86,7 +86,7 @@ class _DateNoteFState extends State<DateNoteF> {
                     child: ListView.builder(
                         itemCount: todos!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          getdownurl(todos[index].uid, todos[index].img);
+                          // getdownurl(todos[index].uid, todos[index].img);
                           return Slidable(
                               key: Key(todos[index].content!),
                               startActionPane: ActionPane(
@@ -174,26 +174,24 @@ class _DateNoteFState extends State<DateNoteF> {
                                           color: Colors.black,
                                         ),
                                         onPressed: () {
-                                          getcate(todos[index].category);
-                                          getdownurl(todos[index].uid,
-                                              todos[index].img);
-                                          if (namecate != '') {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) =>
-                                                    DetailTodo(
-                                                        status: todos[index]
-                                                            .status!,
-                                                        content: todos[index]
-                                                            .content!,
-                                                        uid: todos[index].uid!,
-                                                        // category: namecate!,
-                                                        // img: urlimg!,
-                                                        start: todos[index]
-                                                            .startcontent!,
-                                                        create: todos[index]
-                                                            .content_create_time!));
-                                          }
+                                          // getcate(todos[index].category);
+                                          // getdownurl(todos[index].uid,
+                                          // todos[index].img);
+                                          // if (namecate != '') {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) => DetailTodo(
+                                                  status: todos[index].status!,
+                                                  content:
+                                                      todos[index].content!,
+                                                  uid: todos[index].uid!,
+                                                  // category: namecate!,
+                                                  // img: urlimg!,
+                                                  start: todos[index]
+                                                      .startcontent!,
+                                                  create: todos[index]
+                                                      .content_create_time!));
+                                          // }
                                           //else {
                                           //   showDialog(
                                           //       context: context,
@@ -241,7 +239,7 @@ class _DateNoteFState extends State<DateNoteF> {
                   children: [
                     Center(
                       child: Text(
-                        'Bạn Có Muốn Xóa Tài Khoản?',
+                        'Bạn Có Muốn Ghi Chú?',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black,

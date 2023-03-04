@@ -6,6 +6,7 @@ import 'package:demoapp_todo/welcome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Column(children: [
               SizedBox(
-                height: size.height * 0.1,
+                height: size.height * 0.07,
               ),
               Center(
                 child: Row(
@@ -189,9 +190,6 @@ class _LoginPageState extends State<LoginPage> {
                       )),
                 ),
               ),
-              SizedBox(
-                height: size.height * 0.04,
-              ),
               TextButton(
                   onPressed: () {
                     signIn(_email.text, _password.text);
@@ -211,8 +209,40 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 25,
                             color: Colors.white),
                       ))),
+              Center(
+                child: Text(
+                  '-----or-----',
+                  style: TextStyle(fontSize: 15, color: Colors.black),
+                ),
+              ),
+              Center(
+                child: Text(
+                  'Đăng Nhập Bằng',
+                  style: TextStyle(fontSize: 15, color: Colors.black),
+                ),
+              ),
               SizedBox(
-                height: size.height * 0.085,
+                height: size.height * 0.1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                        child: TextButton(
+                      onPressed: () async {
+                        showDialog(
+                            context: context,
+                            builder: (context) => MessageErrorTime(
+                                  text: 'Thứ 2 Chỉnh s',
+                                ));
+                      },
+                      child: Image(
+                        image: AssetImage('assets/facebook.png'),
+                        width: 30,
+                        height: 30,
+                      ),
+                    )),
+                  ],
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -333,5 +363,16 @@ class _LoginPageState extends State<LoginPage> {
       // Fluttertoast.showToast(msg: errorMessage!);
       print(error.code);
     }
+  }
+
+  Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance
+        .login(permissions: ['email', 'public_profile', 'user_birthday']);
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 }

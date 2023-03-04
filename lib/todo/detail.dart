@@ -103,21 +103,6 @@ class _DetailTodoState extends State<DetailTodo> {
                                     ),
                                   ),
                                 ),
-                                // SizedBox(
-                                //   width: 10,
-                                // ),
-                                // Container(
-                                //   width: size.width * 0.38,
-                                //   height: size.height * 0.2,
-                                //   child: this.widget.img == ''
-                                //       ? Image(
-                                //           image: AssetImage('assets/todo.png'))
-                                //       : Image.network(
-                                //           '${this.widget.img}',
-                                //           width: 70,
-                                //           height: 70,
-                                //         ),
-                                // )
                               ],
                             ),
                           ),
@@ -125,30 +110,6 @@ class _DetailTodoState extends State<DetailTodo> {
                         SizedBox(
                           height: 10,
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 20),
-                        //   child: Row(
-                        //     children: [
-                        //       Text(
-                        //         'Danh Mục:',
-                        //         style: TextStyle(
-                        //           color: Colors.black,
-                        //           fontSize: 15,
-                        //         ),
-                        //       ),
-                        //       SizedBox(
-                        //         width: 10,
-                        //       ),
-                        //       Text(
-                        //         '${this.widget.category}',
-                        //         style: TextStyle(
-                        //             color: Colors.black,
-                        //             fontSize: 20,
-                        //             fontWeight: FontWeight.bold),
-                        //       )
-                        //     ],
-                        //   ),
-                        // ),
                         SizedBox(
                           height: 10,
                         ),

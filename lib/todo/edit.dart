@@ -108,13 +108,13 @@ class _EditTodoState extends State<EditTodo> {
         .catchError((error) => print("Failed to update user: $error"));
   }
 
-  Future<void> updateimg(uid_todo, String anh) {
-    return todo
-        .doc(uid_todo)
-        .update({'img': anh})
-        .then((value) => print("User Updated"))
-        .catchError((error) => print("Failed to update user: $error"));
-  }
+  // Future<void> updateimg(uid_todo, String anh) {
+  //   return todo
+  //       .doc(uid_todo)
+  //       .update({'img': anh})
+  //       .then((value) => print("User Updated"))
+  //       .catchError((error) => print("Failed to update user: $error"));
+  // }
 
   String? iconcate;
   String? namecate;
@@ -312,9 +312,9 @@ class _EditTodoState extends State<EditTodo> {
                                       onPressed: () {
                                         updateList = updatecontent.text;
 
-                                        if (imageUrl != '') {
-                                          updateimg(this.widget.uid, imageUrl);
-                                        }
+                                        // if (imageUrl != '') {
+                                        //   updateimg(this.widget.uid, imageUrl);
+                                        // }
                                         if (updateList != '') {
                                           updatetodo(this.widget.uid);
                                         }

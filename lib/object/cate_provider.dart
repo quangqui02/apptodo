@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp_todo/object/category.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CateProvider {
   CollectionReference catetodo =
@@ -13,6 +14,7 @@ class CateProvider {
     });
   }
 
+  final accid = FirebaseAuth.instance.currentUser?.uid;
   List<Cate> CateFromFirestore(QuerySnapshot snapshot) {
     if (snapshot != null) {
       return snapshot.docs.map((e) {
@@ -29,7 +31,10 @@ class CateProvider {
   }
 
   Stream<List<Cate>> Catetodo() {
-    return catetodo.snapshots().map(CateFromFirestore);
+    return catetodo
+        .where('uid_user', isEqualTo: accid)
+        .snapshots()
+        .map(CateFromFirestore);
   }
 
   Future removecate(uid) async {

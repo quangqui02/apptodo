@@ -238,7 +238,7 @@ class _CreatepageState extends State<Createpage> {
               height: MediaQuery.of(context).size.width * 0.02,
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.1,
+              height: MediaQuery.of(context).size.height * 0.085,
               width: MediaQuery.of(context).size.width * 0.85,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.black),
@@ -353,13 +353,6 @@ class _CreatepageState extends State<Createpage> {
                                 text: 'Nhập Đủ Thông Tin',
                               ));
                     }
-
-                    // }
-
-                    // errorSnackBar(
-                    //   context,
-                    //   'Thêm Ghi Chú Thành Công',
-                    // );
                   },
                   child: Text(
                     'Tạo Ghi Chú',

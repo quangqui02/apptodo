@@ -20,9 +20,8 @@ import 'create.dart';
 class CateTodo extends StatefulWidget {
   @override
   State<CateTodo> createState() => _CateTodoState();
-} ////tesst
+}
 
-///thửu
 class _CateTodoState extends State<CateTodo> {
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class _CateTodoState extends State<CateTodo> {
             child: Container(
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              height: size.height * 0.78,
+              height: size.height * 0.6,
               width: size.width * 0.8,
               child: Column(
                 children: [
@@ -58,7 +57,7 @@ class _CateTodoState extends State<CateTodo> {
                     height: 10,
                   ),
                   Container(
-                    height: size.height * 0.5,
+                    height: size.height * 0.4,
                     width: size.width * 0.75,
                     child: StreamBuilder(
                         stream: CateProvider().Catetodo(),
